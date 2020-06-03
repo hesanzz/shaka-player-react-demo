@@ -4,24 +4,25 @@ import 'shaka-player/dist/controls.css'
 import './App.css';
 
 function App() {
-  const [show, setShow] = React.useState(false);
-  const [smilUrl, setSmilUrl] = React.useState(null);
+  // const [show, setShow] = React.useState(false);
+  const [smilUrl, setSmilUrl] = React.useState('');
   const [pid, updatePid] = React.useState(null);
   const [smilData, updateSmilData] = React.useState(null);
-  const [videoUrl, updateUrl] = React.useState(null);
+  const [videoUrl, updateUrl] = React.useState('');
   const [sessionToken, setTokken] = React.useState('');
 
-
-  function onToggle() {
-    setShow(!show);
-  }
+  // function onToggle() {
+  //   setShow(!show);
+  // }
   const controllerRef = React.useRef(null);
 
-  // React.useEffect( () => {
-  //   setTimeout(onPlay, 500)
-  // });
+  React.useEffect( () => {
+    const url = `https://link.theplatform.com/s/xikYhC/media/x2DkCp0sVrJa?assetTypes=Rendition,Movie&format=SMIL&formats=MPEG-DASH+widevine&tracking=true&auth=${sessionToken}`
+    setSmilUrl(url)
+  },[sessionToken]);
   
   React.useEffect(() => {
+    debugger
     const { 
       /** @type {shaka.Player} */ player, 
       // /** @type {shaka.ui.Overlay} */ ui,
@@ -128,9 +129,9 @@ function App() {
     console.log('smileDara', smilData);
   }
 
-  function getSmilUrl(e) {
-    setSmilUrl(e.target.value)
-  }
+  // function getSmilUrl(e) {
+  //   setSmilUrl(e.target.value)
+  // }
 
   function parseXML (txt) {
     var xmlDoc
@@ -144,8 +145,6 @@ function App() {
   
     return xmlDoc
   }
-
-  console.log('sessionToken', sessionToken); 
   return (
     <div className='shaka-app'>
      <div className='data-comp'>
@@ -153,16 +152,16 @@ function App() {
        <label> Session Token:</label> 
         <input className='input-box' type='text' value={sessionToken} onChange={(e) => setTokken(e.target.value)} />
       </div>
-      <div className='shaka-data'>
-        {/* <input type='text' value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} /> */}
+      {/* <div className='shaka-data'>
+        <input type='text' value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} />
         <label> Smil url: </label>
         <input className='input-box' type='text' value={smilUrl} onChange={getSmilUrl} />
-      </div>
+      </div> */}
      </div>
      
       <div>
         <button onClick={onPlay}> PLAY </button>
-        <button onClick={onToggle}>{show ? 'Hide Player' : 'Show Player'}</button>
+        {/* <button onClick={onToggle}>{show ? 'Hide Player' : 'Show Player'}</button> */}
       </div>
       {/* <div>
         <select value={src} onChange={onSelectSrc}>
