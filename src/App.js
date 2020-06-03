@@ -22,7 +22,6 @@ function App() {
   },[sessionToken]);
   
   React.useEffect(() => {
-    debugger
     const { 
       /** @type {shaka.Player} */ player, 
       // /** @type {shaka.ui.Overlay} */ ui,
