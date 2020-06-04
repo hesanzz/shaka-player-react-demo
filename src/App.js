@@ -10,6 +10,7 @@ function App() {
   const [smilData, updateSmilData] = React.useState(null);
   const [videoUrl, updateUrl] = React.useState('');
   const [sessionToken, setTokken] = React.useState('');
+  let xmlhttp;
 
   // function onToggle() {
   //   setShow(!show);
@@ -84,47 +85,64 @@ function App() {
 
   
   function onPlay() {
-    const params = {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json, text/plain, */*'
-      }
-    }
-    fetch(smilUrl, params).then( response => {
-      const contentType = response.headers.get('content-type')
-      if (response.status > 299) { 
-        // const error = new ServerError(response.statusText)
-        // error.status = response.status 
-        if (contentType && contentType.includes('application/json')) {
-          response.json().then((res) => {
-            console.log('res2', res);
-            const error = new Error(res.error)
-            throw error
-          })
+    
+    // const params = {
+    //   method: 'GET',
+    //   headers: {
+    //     Accept: 'application/json, text/plain, */*'
+    //   }
+    // }
+    // fetch(smilUrl, params).then( response => {
+    //   const contentType = response.headers.get('content-type')
+    //   if (response.status > 299) { 
+    //     // const error = new ServerError(response.statusText)
+    //     // error.status = response.status 
+    //     if (contentType && contentType.includes('application/json')) {
+    //       response.json().then((res) => {
+    //         console.log('res2', res);
+    //         const error = new Error(res.error)
+    //         throw error
+    //       })
           
-        } else {
-          response.text().then((res) => {
-            console.log('res3', res);
-            const error = new Error(res.error)
-            throw error
-          })
-        }
-      } else {
-        if (contentType && contentType.includes('application/json')) {
-          response.json().then((res) => {
-            const smilParsedData = parseXML(res)
-            console.log('smilParsedData', smilParsedData);
-            updateSmilData(smilParsedData)
-            console.log('responseresponseresponse', res)
-          })
-        }
-        response.text().then((res) => {
-          const smilParsedData = parseXML(res)
+    //     } else {
+    //       response.text().then((res) => {
+    //         console.log('res3', res);
+    //         const error = new Error(res.error)
+    //         throw error
+    //       })
+    //     }
+    //   } else {
+    //     if (contentType && contentType.includes('application/json')) {
+    //       response.json().then((res) => {
+    //         const smilParsedData = parseXML(res)
+    //         console.log('smilParsedData', smilParsedData);
+    //         updateSmilData(smilParsedData)
+    //         console.log('responseresponseresponse', res)
+    //       })
+    //     }
+    //     response.text().then((res) => {
+    //       const smilParsedData = parseXML(res)
+    //       console.log('smilParsedData', smilParsedData);
+    //       updateSmilData(smilParsedData)
+    //     })
+    //   }
+    // })
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+      xmlhttp=new XMLHttpRequest();
+    }
+    xmlhttp.onreadystatechange=function()
+    {
+        if (xmlhttp.readyState===4 && xmlhttp.status===200)
+        {
+          const smilParsedData = xmlhttp.responseText;
           console.log('smilParsedData', smilParsedData);
-          updateSmilData(smilParsedData)
-        })
-      }
-    })
+          const tempSmilData = parseXML(smilParsedData);
+          updateSmilData(tempSmilData)
+        }
+    }
+    xmlhttp.open("GET", smilUrl, false );
+    xmlhttp.send();                
     console.log('smileDara', smilData);
   }
 
